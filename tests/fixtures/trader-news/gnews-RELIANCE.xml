@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic, deterministic feed for tests; not real headlines. -->
+<rss version="2.0">
+  <channel>
+    <title>"Reliance Industries" NSE share when:7d - Google News</title>
+    <item>
+      <title>Reliance Industries Q2 results: net profit rises, beats estimates - Moneycontrol</title>
+      <link>https://news.google.com/rss/articles/CBMi-rel-q2</link>
+      <guid isPermaLink="false">rel-q2</guid>
+      <pubDate>Thu, 05 Nov 2026 14:30:00 GMT</pubDate>
+      <description>Reliance Industries reported quarterly results ahead of estimates.</description>
+    </item>
+    <item>
+      <title>SEBI approves Reliance Jio IPO draft papers - Economic Times</title>
+      <link>https://news.google.com/rss/articles/CBMi-rel-sebi</link>
+      <guid isPermaLink="false">rel-sebi</guid>
+      <pubDate>Fri, 06 Nov 2026 03:10:00 GMT</pubDate>
+      <description>The regulator cleared the draft red herring prospectus.</description>
+    </item>
+    <item>
+      <title>RBI repo rate decision keeps markets guessing; Reliance among top movers - Mint</title>
+      <link>https://news.google.com/rss/articles/CBMi-rel-rbi</link>
+      <guid isPermaLink="false">rel-rbi</guid>
+      <pubDate>Fri, 06 Nov 2026 02:00:00 GMT</pubDate>
+      <description>Banks and oil majors led the Nifty.</description>
+    </item>
+    <item>
+      <title>Reliance Industries Share Price Today Live Updates - NSE: RELIANCE - Groww</title>
+      <link>https://news.google.com/rss/articles/CBMi-rel-quote</link>
+      <guid isPermaLink="false">rel-quote</guid>
+      <pubDate>Fri, 06 Nov 2026 04:00:00 GMT</pubDate>
+      <description>A quote page, not a story.</description>
+    </item>
+    <item>
+      <title>Reliance announces bonus shares for shareholders - Business Standard</title>
+      <link>https://news.google.com/rss/articles/CBMi-rel-bonus</link>
+      <guid isPermaLink="false">rel-bonus</guid>
+      <pubDate>Fri, 06 Nov 2026 05:30:00 GMT</pubDate>
+      <description>Published after the pinned 10:15 IST clock in the tests.</description>
+    </item>
+    <item>
+      <title>Reliance retail arm opens 200 new stores - Livemint</title>
+      <link>https://news.google.com/rss/articles/CBMi-rel-old</link>
+      <guid isPermaLink="false">rel-old</guid>
+      <pubDate>Sat, 31 Oct 2026 10:00:00 GMT</pubDate>
+      <description>An older story, only inside a wide window.</description>
+    </item>
+  </channel>
+</rss>

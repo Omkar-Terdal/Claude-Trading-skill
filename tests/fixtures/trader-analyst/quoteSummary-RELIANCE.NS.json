@@ -1,0 +1,189 @@
+{
+ "_synthetic": "synthetic fixture: hand-built in the shape of Yahoo's quoteSummary JSON for NSE tickers, rounded numbers, no network",
+ "quoteSummary": {
+  "error": null,
+  "result": [
+   {
+    "price": {
+     "longName": "Reliance Industries Limited",
+     "currency": "INR"
+    },
+    "financialData": {
+     "financialCurrency": "INR",
+     "currentPrice": {
+      "raw": 1320.0,
+      "fmt": "1320.0"
+     },
+     "totalRevenue": {
+      "raw": 11990330245120,
+      "fmt": "11990330245120"
+     },
+     "grossProfits": {
+      "raw": 3836410068992,
+      "fmt": "3836410068992"
+     },
+     "ebitda": {
+      "raw": 1868889980928,
+      "fmt": "1868889980928"
+     },
+     "freeCashflow": {
+      "raw": 118661251072,
+      "fmt": "118661251072"
+     },
+     "grossMargins": {
+      "raw": 0.31996,
+      "fmt": "0.31996"
+     },
+     "operatingMargins": {
+      "raw": 0.12493,
+      "fmt": "0.12493"
+     },
+     "profitMargins": {
+      "raw": 0.06848,
+      "fmt": "0.06848"
+     },
+     "revenueGrowth": {
+      "raw": 0.298,
+      "fmt": "0.298"
+     },
+     "earningsGrowth": {
+      "raw": 0.407,
+      "fmt": "0.407"
+     },
+     "returnOnEquity": {
+      "raw": 0.08759,
+      "fmt": "0.08759"
+     },
+     "debtToEquity": {
+      "raw": 44.325,
+      "fmt": "44.325"
+     },
+     "currentRatio": {
+      "raw": 1.135,
+      "fmt": "1.135"
+     },
+     "targetMeanPrice": {
+      "raw": 1666.0,
+      "fmt": "1666.0"
+     },
+     "recommendationKey": "strong_buy"
+    },
+    "defaultKeyStatistics": {
+     "trailingEps": {
+      "raw": 60.68,
+      "fmt": "60.68"
+     },
+     "forwardEps": {
+      "raw": 73.7244,
+      "fmt": "73.7244"
+     },
+     "netIncomeToCommon": {
+      "raw": 821100019712,
+      "fmt": "821100019712"
+     }
+    },
+    "incomeStatementHistory": {
+     "maxAge": 86400,
+     "incomeStatementHistory": [
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1774915200,
+        "fmt": "2026-03-31"
+       },
+       "totalRevenue": {
+        "raw": 10572190000000,
+        "fmt": "10572190000000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 438510000000,
+        "fmt": "438510000000"
+       }
+      },
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1743379200,
+        "fmt": "2025-03-31"
+       },
+       "totalRevenue": {
+        "raw": 5173490000000,
+        "fmt": "5173490000000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 352620000000,
+        "fmt": "352620000000"
+       }
+      },
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1711843200,
+        "fmt": "2024-03-31"
+       },
+       "totalRevenue": {
+        "raw": 5345340000000,
+        "fmt": "5345340000000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 420420000000,
+        "fmt": "420420000000"
+       }
+      },
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1680220800,
+        "fmt": "2023-03-31"
+       },
+       "totalRevenue": {
+        "raw": 5297730000000,
+        "fmt": "5297730000000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 442050000000,
+        "fmt": "442050000000"
+       }
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

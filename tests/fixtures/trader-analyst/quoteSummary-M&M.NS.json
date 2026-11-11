@@ -1,0 +1,113 @@
+{
+ "_synthetic": "synthetic fixture: hand-built in the shape of Yahoo's quoteSummary JSON for NSE tickers, rounded numbers, no network",
+ "quoteSummary": {
+  "error": null,
+  "result": [
+   {
+    "price": {
+     "longName": "Mahindra & Mahindra Limited",
+     "currency": "INR"
+    },
+    "financialData": {
+     "financialCurrency": "INR",
+     "currentPrice": {
+      "raw": 3287.2,
+      "fmt": "3287.2"
+     },
+     "totalRevenue": {
+      "raw": 1250000000000,
+      "fmt": "1250000000000"
+     },
+     "grossMargins": {
+      "raw": 0.3,
+      "fmt": "0.3"
+     },
+     "operatingMargins": {
+      "raw": 0.14,
+      "fmt": "0.14"
+     },
+     "profitMargins": {
+      "raw": 0.09,
+      "fmt": "0.09"
+     },
+     "revenueGrowth": {
+      "raw": 0.12,
+      "fmt": "0.12"
+     },
+     "earningsGrowth": {
+      "raw": 0.18,
+      "fmt": "0.18"
+     },
+     "returnOnEquity": {
+      "raw": 0.17,
+      "fmt": "0.17"
+     },
+     "recommendationKey": "buy"
+    },
+    "defaultKeyStatistics": {
+     "trailingEps": {
+      "raw": 118.4,
+      "fmt": "118.4"
+     },
+     "netIncomeToCommon": {
+      "raw": 150000000000,
+      "fmt": "150000000000"
+     }
+    },
+    "incomeStatementHistory": {
+     "maxAge": 86400,
+     "incomeStatementHistory": [
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1774915200,
+        "fmt": "2026-03-31"
+       },
+       "totalRevenue": {
+        "raw": 1250000000000,
+        "fmt": "1250000000000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 150000000000,
+        "fmt": "150000000000"
+       }
+      },
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1743379200,
+        "fmt": "2025-03-31"
+       },
+       "totalRevenue": {
+        "raw": 1100000000000,
+        "fmt": "1100000000000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 128000000000,
+        "fmt": "128000000000"
+       }
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

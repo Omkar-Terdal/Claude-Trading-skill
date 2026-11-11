@@ -1,0 +1,53 @@
+{
+ "_synthetic": "synthetic fixture: hand-built from the shape of Yahoo's chart JSON, numbers invented, no network",
+ "chart": {
+  "result": [
+   {
+    "meta": {
+     "currency": "INR",
+     "symbol": "M&M.NS",
+     "exchangeName": "NSI",
+     "fullExchangeName": "NSE",
+     "instrumentType": "EQUITY",
+     "regularMarketTime": 1793959200,
+     "gmtoffset": 19800,
+     "timezone": "IST",
+     "exchangeTimezoneName": "Asia/Kolkata",
+     "regularMarketPrice": 3287.2,
+     "regularMarketDayHigh": 3290.0,
+     "regularMarketDayLow": 3135.5,
+     "longName": "Mahindra & Mahindra Limited",
+     "chartPreviousClose": 3127.5,
+     "previousClose": 3127.5,
+     "dataGranularity": "1d",
+     "range": "1d"
+    },
+    "timestamp": [
+     1793936700
+    ],
+    "indicators": {
+     "quote": [
+      {
+       "open": [
+        3140.0
+       ],
+       "high": [
+        3290.0
+       ],
+       "low": [
+        3135.5
+       ],
+       "close": [
+        3287.2
+       ],
+       "volume": [
+        1000000
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "error": null
+ }
+}

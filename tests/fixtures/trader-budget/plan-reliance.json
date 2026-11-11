@@ -1,0 +1,26 @@
+{
+  "_synthetic": "Synthetic plan for tests: RELIANCE orb, Fri 2026-11-06, not a real trade.",
+  "created_by": "trader-exit",
+  "symbol": "RELIANCE",
+  "side": "buy",
+  "date": "2026-11-06",
+  "setup": "orb",
+  "entry": 1311.9,
+  "entry_time": "9:50 AM",
+  "entry_bar": 6,
+  "interval": "5m",
+  "opening_range": {
+    "high": 1306.0,
+    "low": 1295.6,
+    "minutes": 15
+  },
+  "stop": 1300.8,
+  "stop_rule": "or_mid",
+  "stop_label": "opening-range midpoint",
+  "target": 1323.0,
+  "target_r": 1.0,
+  "target_label": "1R (one times the risk)",
+  "risk_per_share": 11.1,
+  "reward_risk": 1.0,
+  "flat_by": "15:20"
+}

@@ -1,0 +1,12 @@
+{
+  "created_by": "trader-budget",
+  "status": "proposed",
+  "note": "Synthetic fixture (not real market data): five rupee-amount buys that fill a 5,00,000 paper account to 90%.",
+  "orders": [
+    {"symbol": "RELIANCE", "side": "buy", "notional": "125000", "type": "market", "time_in_force": "day"},
+    {"symbol": "HDFCBANK", "side": "buy", "notional": "111900", "type": "market", "time_in_force": "day"},
+    {"symbol": "TCS", "side": "buy", "notional": "82300", "type": "market", "time_in_force": "day"},
+    {"symbol": "ITC", "side": "buy", "notional": "70800", "type": "market", "time_in_force": "day"},
+    {"symbol": "SBIN", "side": "buy", "notional": "60000", "type": "market", "time_in_force": "day"}
+  ]
+}

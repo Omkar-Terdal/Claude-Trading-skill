@@ -2,16 +2,17 @@
 name: trader-entry
 description: >-
   Entry Timer. Watches a setup bar by bar and tells you the moment to get in.
-  Reads free Yahoo 1-minute or 5-minute bars, builds the opening range (the
-  first 15 minutes by default) and calls the entry on the first completed bar
-  that CLOSES above the range high, or above a level you give it (like a
-  20-day high from the scanner), with an optional volume check. Says waiting
-  and how far, triggered with the time and the price, expired, or not open
-  yet, and writes trader/entry.json for /trader-exit. Long side only. It never
-  places an order. Use when the user says "tell me when to get in", "watch
-  TSLA", "has it broken out", "did it break the opening range", "entry
-  signal", "time my entry", "check my watchlist", or after /trader-scanner
-  and /trader-news, before /trader-exit.
+  Reads free Yahoo 1-minute or 5-minute bars for NSE stocks, builds the
+  opening range (the first 15 minutes after the 9:15 AM IST open by default)
+  and calls the entry on the first completed bar that CLOSES above the range
+  high, or above a level you give it (like a 20-day high from the scanner),
+  with an optional volume check. Says waiting and how far, triggered with the
+  time and the price, expired, or not open yet, and writes trader/entry.json
+  for /trader-exit. Long side only. It never places an order. Use when the
+  user says "tell me when to get in", "watch RELIANCE", "has it broken out",
+  "did it break the opening range", "entry signal", "time my entry", "check
+  my watchlist", or after /trader-scanner and /trader-news, before
+  /trader-exit.
 argument-hint: "[TICKER] [--setup orb|level] [--interval 5m|1m]"
 ---
 
@@ -27,51 +28,54 @@ people money, and a clean signal does not change that.
 `${CLAUDE_SKILL_DIR}` below is this skill's folder (where this SKILL.md lives).
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/entry.py" check TSLA                  # 15-minute opening range, 5-minute bars
-python3 "${CLAUDE_SKILL_DIR}/entry.py" check TSLA --write          # also save trader/entry.json
-python3 "${CLAUDE_SKILL_DIR}/entry.py" check TSLA --setup level --level 371.20
-python3 "${CLAUDE_SKILL_DIR}/entry.py" check TSLA --interval 1m --min-volume-x 1.5
-python3 "${CLAUDE_SKILL_DIR}/entry.py" watch TSLA --until 15:30    # one line per closed bar, stops on the trigger
-python3 "${CLAUDE_SKILL_DIR}/entry.py" watchlist                   # every hit in trader/watchlist.json
+python3 "${CLAUDE_SKILL_DIR}/entry.py" check RELIANCE                  # 15-minute opening range, 5-minute bars
+python3 "${CLAUDE_SKILL_DIR}/entry.py" check RELIANCE --write          # also save trader/entry.json
+python3 "${CLAUDE_SKILL_DIR}/entry.py" check RELIANCE --setup level --level 1320
+python3 "${CLAUDE_SKILL_DIR}/entry.py" check RELIANCE --interval 1m --min-volume-x 1.5
+python3 "${CLAUDE_SKILL_DIR}/entry.py" watch RELIANCE --until 15:20    # one line per closed bar, stops on the trigger
+python3 "${CLAUDE_SKILL_DIR}/entry.py" watchlist                       # every hit in trader/watchlist.json
 ```
 
-Other flags: `--or-minutes N` (default 15), `--json`, `--offline FILE` (a
-saved Yahoo chart JSON, `.json` or `.json.gz`, or a folder of
-`<TICKER>.json`), `--now "2026-10-19 10:15"` (New York time) to replay a day.
-`watch` with `--now` or `--offline` runs on a simulated clock and replays the
-day bar by bar without waiting.
+Tickers are NSE symbols (RELIANCE, INFY); `.NS` is added for Yahoo, or give
+`.BO` for a BSE listing. Other flags: `--or-minutes N` (default 15), `--json`,
+`--offline FILE` (a saved Yahoo chart JSON, `.json` or `.json.gz`, or a folder
+of `<TICKER>.json`), `--now "2026-11-06 09:55"` (IST) to replay a day. `watch`
+with `--now` or `--offline` runs on a simulated clock and replays the day bar
+by bar without waiting.
 
 ## What it reads and writes
 
 | file | what |
 | --- | --- |
 | `trader/watchlist.json` | the scanner's hits (`hits[].symbol`), for `watchlist` |
-| `trader/config.json` | `no_entries_before` (09:45) and `no_entries_after` (15:30), New York time. Optional |
+| `trader/config.json` | `no_entries_before` (09:45) and `no_entries_after` (15:30), IST. Optional |
 | Yahoo chart API | today's bars, `range=1d&interval=5m` (or `1m`): free, unofficial, can lag |
 | `trader/entry.json` | with `check --write`, or when `watch` triggers: symbol, setup, status, time, bar, price, level, opening range |
 
 ## The rule
 
 - **Opening range (orb).** The high and low of the first 15 minutes: the
-  9:30, 9:35 and 9:40 five-minute bars, or fifteen 1-minute bars. The level
+  9:15, 9:20 and 9:25 five-minute bars, or fifteen 1-minute bars. The level
   to beat is the range high.
 - **Level.** A price you give, like a 20-day high from `/trader-scanner`.
 - **The trigger** is the first completed bar after the range that CLOSES
   above the level. A wick above is not a trigger. A close exactly at the
   level is not above it.
-- **The time** is that bar's close time (the 10:10 bar closes at 10:15 AM).
-  The price is its close, to the cent.
+- **The time** is that bar's close time (the 9:45 bar closes at 9:50 AM).
+  The price is its close, to the paisa.
 - **Only closed bars count.** A bar is closed when the clock passes its start
   plus 5 (or 1) minutes and Yahoo has caught up to that moment (it waits a
   minute at most). Yahoo's live tick, like 10:49:45, is never a bar.
 - **Volume, if you want it.** `--min-volume-x 1.5` also needs the trigger
-  bar's volume at 1.5 times the range bars' average. The 9:30 bar holds the
+  bar's volume at 1.5 times the range bars' average. The 9:15 bar holds the
   opening auction, so 1.0 is already strict.
-- **Time limits.** No entries before 9:45 or after 15:30 (config). On a 1:00
-  p.m. early close the cutoff moves up with the close, to 12:30.
+- **Time limits.** No entries before 9:45 or after 15:30 (config). The NSE has
+  no early closes, so the cutoff never moves.
 - **What it says.** Waiting (and how far the last close is from the level),
-  triggered, expired, or no data. Before 9:30: not open yet. Before 9:45: the
-  range is still forming. Weekends and NYSE holidays: the market is closed.
+  triggered, expired, or no data. Before 9:15: not open yet. Before 9:30: the
+  range is still forming. Weekends and NSE holidays: the market is closed.
+- **Pre-open.** The 9:00 to 9:08 pre-open call auction is not part of the
+  range; the first bar is the 9:15 one.
 
 ## Steps
 
@@ -79,7 +83,7 @@ day bar by bar without waiting.
    `/trader-scanner`. Check `/trader-news` for it first.
 2. Run `entry.py check SYMBOL`. Tell the user the status in one line:
    waiting and how far, triggered at what time and price, or expired.
-3. To wait for it, Claude can run `entry.py watch SYMBOL --until 15:30` in
+3. To wait for it, Claude can run `entry.py watch SYMBOL --until 15:20` in
    the background, or `entry.py check SYMBOL --write` on a `/loop` every 5
    minutes. `watch` wakes just after each bar closes, prints one line per
    bar, and exits 0 on the trigger (it writes `trader/entry.json`) or 1 when
@@ -91,28 +95,32 @@ day bar by bar without waiting.
 5. Hand off to `/trader-exit` to set the stop and the target BEFORE anything
    is bought.
 
-## Example: the reel
+## Example: RELIANCE on Friday 2026-11-06
 
-TSLA, Monday 2026-10-19, 5-minute bars. The opening range is 354.47 to
-362.18. At 10:12 the 10:10 bar is still open, so it waits:
-
-```
-WAITING  last close $361.68 (10:05 bar), $0.50 under the range high $362.18 (-0.14%).
-The 10:10 bar is still forming ($364.18 so far, closes 10:15 AM); it does not count until it closes.
-```
-
-At 10:15 the bar has closed:
+Real data, 5-minute bars. The opening range (9:15 to 9:30) is 1295.60 to
+1306.00. At 9:48 the 9:45 bar is still open, so it waits:
 
 ```
-TSLA  Mon 2026-10-19 10:15 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
-Opening range 9:30-9:45: high $362.18, low $354.47 (3 of 3 bars).
-TRIGGERED 10:15 AM at $364.18: the 10:10 bar (bar 8) closed above the range high $362.18 (+0.55%).
+WAITING  last close ₹1305.70 (9:40 bar), ₹0.30 under the range high ₹1306.00 (-0.02%).
+The 9:45 bar is still forming (₹1311.90 so far, closes 9:50 AM); it does not count until it closes.
+```
+
+At 9:55 the bar has closed:
+
+```
+RELIANCE  Fri 2026-11-06 09:55 IST  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:15-9:30: high ₹1306.00, low ₹1295.60 (3 of 3 bars).
+TRIGGERED 9:50 AM at ₹1311.90: the 9:45 bar (bar 6) closed above the range high ₹1306.00 (+0.45%).
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
 ```
 
-With `--min-volume-x 1` the 10:10 bar is too thin (0.60x the range's volume)
-and the trigger moves to 10:35 AM at 365.75 (the 10:30 bar, 7.98x).
+Run at 11:00 with `--min-volume-x 1`, it reports the same trigger with the
+volume (2.07x the range's volume) and says "That was 70 minutes ago ... A late
+entry is a different trade." With `--setup level --level 1320` at 11:00 it is
+still waiting: the last close, 1310.50, is 9.50 under the level. At 9:20 it
+says "RANGE FORMING, 1 of 3 range bars closed". At 15:40 a level that was never
+reached says EXPIRED.
 
 ## Rules
 
@@ -140,5 +148,5 @@ watch: nobody is there to say yes.
   passed that exact order today, the user typed an explicit yes for that one order in the chat, and the
   user clicked Allow once on Claude's own card because the order tool is set to "Needs approval"
   (Customize > Connectors > tool permissions). Never set an order tool to "Always allow".
-- No options, margin, short selling or leverage unless the config allows it and the user confirms.
-- Broker keys live in environment variables or the Claude Desktop config, never in the chat.
+- No options, F&O, margin, short selling or leverage unless the config allows it and the user confirms.
+- Broker credentials live with the broker's own login or the Claude Desktop config, never in the chat.

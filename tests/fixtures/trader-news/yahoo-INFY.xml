@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic, deterministic feed for tests; not real headlines. -->
+<rss version="2.0">
+  <channel>
+    <title>Yahoo! Finance: INFY News</title>
+    <item>
+      <title>Infosys (INFY) wins large cloud deal from European bank</title>
+      <link>https://finance.yahoo.com/news/infosys-cloud-deal.html</link>
+      <guid isPermaLink="false">infy-deal</guid>
+      <pubDate>Fri, 06 Nov 2026 03:30:00 +0000</pubDate>
+      <description>A multi-year transformation contract.</description>
+    </item>
+    <item>
+      <title>Infosys CEO Salil Parekh says AI demand steady; guidance maintained</title>
+      <link>https://finance.yahoo.com/news/infosys-ceo-guidance.html</link>
+      <guid isPermaLink="false">infy-ceo</guid>
+      <pubDate>Fri, 06 Nov 2026 02:45:00 +0000</pubDate>
+      <description>Management kept its full-year view.</description>
+    </item>
+    <item>
+      <title>Tata Consultancy Services and Infosys downgraded by brokerage on weak IT outlook</title>
+      <link>https://finance.yahoo.com/news/it-downgrade.html</link>
+      <guid isPermaLink="false">it-down</guid>
+      <pubDate>Fri, 06 Nov 2026 01:15:00 +0000</pubDate>
+      <description>Two large IT names cut to neutral.</description>
+    </item>
+  </channel>
+</rss>

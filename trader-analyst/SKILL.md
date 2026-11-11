@@ -1,72 +1,88 @@
 ---
 name: trader-analyst
 description: >-
-  The Earnings Analyst. Reads a company's reported numbers straight from SEC
-  EDGAR (XBRL company facts from its 10-Qs and 10-Ks, plus the latest earnings
-  8-K and its press release) and sums up what changed: revenue, gross,
-  operating and net margins, net income and diluted EPS, quarter by quarter,
-  each against the same quarter a year earlier, with the trailing twelve
-  months. Reads an earnings call transcript when you paste one. Use when the
-  user says "how did Tesla's earnings look", "analyze the earnings", "what
-  changed this quarter", "is revenue growing", "check the 10-Q", "compare
-  margins", "sum up the call", "does it report this week", or before trading
-  a stock around its earnings.
+  The Earnings Analyst. Reads an NSE company's reported numbers from Yahoo
+  Finance (free quoteSummary data, standard library, no key) and sums up what
+  changed: revenue, net income, margins, EPS and growth, year by year with
+  the trailing twelve months, formatted in rupees, lakh and crore. Flags
+  numbers that look wrong and says when Yahoo reports in another currency.
+  Reads an earnings call transcript when you paste one. Use when the user
+  says "how did Infosys's results look", "analyze the earnings", "what
+  changed this year", "is revenue growing", "compare margins", "sum up the
+  call", "when does it report", or before trading a stock around its results.
 argument-hint: "[tickers]"
 ---
 
 # trader-analyst
 
-Earnings move stocks more than anything else on the calendar, and the press
-release is written to put the best number first. This skill reads the numbers
-the company actually filed with the SEC, lines them up quarter by quarter, and
-says plainly what changed. For a day trader it answers two questions before a
+Results move stocks more than anything else on the calendar, and the press
+release is written to put the best number first. This skill pulls the numbers
+Yahoo Finance holds for the company, lines them up year by year, and says
+plainly what changed. For a day trader it answers two questions before a
 trade: what did the last report say, and is the next one inside this trade?
+
+**What it is not.** This is a summary of a data vendor's figures, not the
+company's filings. India's primary sources are the quarterly results and
+annual reports on nseindia.com and bseindia.com. Yahoo's numbers can be
+consolidated or standalone, can lag, and can be wrong. The tool shows annual
+periods (default 4) and a trailing-twelve-month block, not quarters.
 
 Tool in this folder (standard library Python, no keys):
 
 ```bash
+python3 "${CLAUDE_SKILL_DIR}/facts.py" RELIANCE TCS INFY --changes
+python3 "${CLAUDE_SKILL_DIR}/facts.py" RELIANCE --metrics trader/metrics.json
+python3 "${CLAUDE_SKILL_DIR}/facts.py" HDFCBANK --json
 python3 "${CLAUDE_SKILL_DIR}/facts.py" --help
 ```
 
-It needs the SEC User-Agent (`sec_user_agent` in `trader/config.json`, or
-`SEC_USER_AGENT`): "Your Name you@example.com" with the user's real name and
-email. It refuses to call SEC without one.
+Tickers are NSE symbols; `.NS` is added, or give `.BO`. `--quarters N` is the
+number of ANNUAL periods to show (the name is a leftover; Yahoo's free data
+has no quarterly income statement here).
 
 ## What it reads and writes
 
-- Reads `https://data.sec.gov/api/xbrl/companyfacts/CIK##########.json` (every
-  number the company has tagged in its filings), the company's submissions
-  list (for the newest 10-Q or 10-K and the newest 8-K with item 2.02,
-  "Results of Operations") and that 8-K's folder to find the press release
-  (the EX-99.1 exhibit).
+- Reads Yahoo Finance's `quoteSummary` for `<TICKER>.NS` with the modules
+  `financialData`, `incomeStatementHistory` and `defaultKeyStatistics`. Yahoo
+  now answers 401 unless the request carries a cookie and a "crumb": the tool
+  gets both itself (a request to fc.yahoo.com, then `getcrumb`) and reuses
+  them for the run. If that handshake changes, the tool fails with an HTTP
+  error rather than guessing.
 - Writes `trader/metrics.json` with `--metrics`: one row per company (TTM
-  revenue, net income and diluted EPS, the latest margins and growth), for
-  your notes or a spreadsheet. `metrics.example.json` in this folder is a
-  real run for AAPL, AXP, GOOGL, KO and BAC on 2026-10-13.
+  revenue, net income and EPS, margins, growth, return on equity, debt to
+  equity). `metrics.example.json` in this folder is a real run for RELIANCE,
+  TCS, INFY, HDFCBANK and ITC on 2026-11-07.
 - Earnings calls: the tool does not fetch transcripts. If the user pastes one
-  (or the company's IR page has it), read it and sum up what management said
-  changed: guidance, margins, demand, anything they declined to answer.
-- The next report date is not in SEC data. Look for it in `/trader-news`
-  headlines or on the company's investor relations page, and say where it
-  came from.
+  (or the company's investor page has it), read it and sum up what management
+  said changed: guidance, margins, demand, anything they declined to answer.
+- The next results date is not in this data. Look for it in `/trader-news`
+  headlines or on the company's investor relations page or the NSE board
+  meetings list, and say where it came from.
 
 ## The rules
 
-- **Filed numbers first.** The table comes from XBRL facts the company filed.
-  Use the press release for context (guidance, segment colour), and say which
-  numbers came from where.
-- **Compare like with like.** Growth is against the same quarter a year
-  earlier. Quarter-on-quarter changes are shown but many businesses are
-  seasonal (Apple's December quarter is always its biggest).
-- **Say what is derived.** Companies do not file a Q4 10-Q. The fourth
-  quarter is the 10-K year minus the three quarters inside it and is marked
-  "derived"; derived EPS is approximate.
-- **Say when the data lags.** SEC's facts API can trail a filing. When the
-  newest 10-Q is later than the newest quarter in the facts, the tool prints a
-  NOTE with the link: read the 10-Q itself before summarising.
-- **Flag one-offs.** When net income is above operating income, gains outside
-  the business (investment marks, tax items) are inside it. The tool says so.
-  Banks and insurers have no gross margin: blank, not zero.
+- **Yahoo's numbers, said as Yahoo's.** Name the source whenever you quote a
+  figure, and check anything that drives a trade against the exchange filing.
+- **Compare like with like.** Growth is against the same period a year
+  earlier. Indian companies report on a April to March fiscal year, so
+  "2026-03-31" is FY26.
+- **Mind the currency.** Some Indian IT exporters (INFY in the 2026-11-07 run)
+  have TTM figures reported in USD by Yahoo while the annual table is in
+  rupees. The tool prints a NOTE and shows TTM money as `USD 20.37B` when so.
+  Never mix the two in one sentence.
+- **Distrust a jump.** In the 2026-11-07 run Yahoo gave Reliance's annual
+  revenue as ₹1,057,219 Cr for FY26 against ₹517,349 Cr for FY25 (+104 %), while
+  its own trailing growth said +29.8 %. The tool now prints a CHECK line for
+  any annual move over 50 %. Do not report such a number as a result: open the
+  filing.
+- **Missing is not zero.** Gross profit and operating income that Yahoo
+  leaves out are shown blank. Banks and NBFCs have no gross margin, and
+  Yahoo's net income and EPS history for several Indian names are blank too
+  (`Net Income: N/A`, `EPS dil: -`).
+- **Flag one-offs.** When net income looks out of line with operating
+  profit, say it could be a gain or tax item and send the user to the filing.
+- **Recommendations are Yahoo's survey.** The "Analyst mean target" line is a
+  third-party survey. Quote it as that, never as this tool's view.
 
 ## Steps
 
@@ -74,50 +90,48 @@ email. It refuses to call SEC without one.
    `trader/watchlist.json`):
 
    ```bash
-   python3 "${CLAUDE_SKILL_DIR}/facts.py" TSLA
-   python3 "${CLAUDE_SKILL_DIR}/facts.py" TSLA NVDA AMD --metrics trader/metrics.json
+   python3 "${CLAUDE_SKILL_DIR}/facts.py" RELIANCE
+   python3 "${CLAUDE_SKILL_DIR}/facts.py" RELIANCE TCS INFY --changes --metrics trader/metrics.json
    ```
 
-   `--quarters 8` shows two years, `--json` everything machine-readable,
-   `--cik` a company without a ticker.
-2. Open the latest earnings press release (the EX-99 link) and the 10-Q when
-   the numbers need context, and read them.
-3. Write the summary: one line on the quarter (revenue, EPS, growth), one on
-   margins, one on anything unusual (a one-off, a derived quarter, data that
-   lags), and the links. Plain words, real numbers, no adjectives the numbers
-   do not support.
-4. If the next report falls inside the planned trade (an overnight hold, or a
-   report before the open), say it before `/trader-exit` sets the stop: a stop
-   does not protect against a gap, the stock can open past it.
+2. Read any NOTE or CHECK line first. If there is one, the figures it covers
+   need the exchange filing before they go in a summary.
+3. Write the summary: one line on the year (revenue, profit, growth), one on
+   margins, one on anything unusual (a CHECK, a currency note, a blank), and
+   where the numbers came from. Plain words, real numbers, no adjectives the
+   numbers do not support.
+4. If the next results date falls inside the planned trade (an overnight hold,
+   or a report before the open), say it before `/trader-exit` sets the stop: a
+   stop does not protect against a gap, the stock can open past it.
 
-## Example: the reel's stock
+## Example: 2026-11-07
 
-`facts.py TSLA` (run 2026-10-20): quarter ending 2026-06-30 (Q2 2026),
-revenue $28.24B, +25.5% against a year earlier, net income $1.11B (-4.9%),
-diluted EPS $0.32 (-3.0%); gross margin 16.8% (-4.3 points on the quarter
-before), operating margin 1.4%; last four quarters $103.6B revenue and $1.08
-EPS. The tool flags that net income is above operating income, so gains
-outside the business are inside it. Latest 10-Q filed 2026-07-23. Monday's
-headlines said Tesla reports this week, so the summary ends: "The next report
-is days away. A day trade that closes before the bell is not exposed to it;
-anything held overnight is."
+`facts.py TCS --changes`, real output (shortened): FY26 (year ending
+2026-03-31) revenue ₹267,021 Cr, +4.6 % on a year earlier, net income ₹49,210
+Cr (+1.4 %); the trailing block says revenue growth +11.2 % and earnings
+growth +15.0 %, operating margin 24.0 %, net margin 18.2 %, return on equity
+and debt to equity from Yahoo. The summary: "Per Yahoo, TCS grew FY26 revenue
+4.6 % and profit 1.4 %, with a net margin of 18.4 %, 0.6 points lower than the
+year before. Yahoo's trailing figures are faster (+11.2 %), so the two windows
+disagree: check the latest quarterly result on nseindia.com. No results date
+in this data."
 
-`facts.py AAPL` (2026-10-13): revenue $109.42B, +16.4% against a year
-earlier, diluted EPS $2.02 (+28.7%). For Coca-Cola the tool noted that SEC's
-facts stopped at 2026-04-03 while the 10-Q for 2026-07-03 was already filed,
-so the summary read that 10-Q directly.
+`facts.py RELIANCE --changes` printed the CHECK line for the +104 % revenue
+jump, so the right summary is "the data is not reliable for the annual
+comparison; the TTM growth Yahoo shows is +29.8 %, confirm with the filing".
+`facts.py INFY` printed `NOTE: Yahoo reports this company's TTM figures in
+USD`.
 
 ## What it never does
 
-- Never says a stock is cheap, expensive, a buy or a sell. It reports what
-  the company filed.
-- Never invents a number the filings do not have, or estimates a quarter it
-  cannot derive.
-- Never calls SEC without the User-Agent, and stays well under 10 requests a
-  second.
+- Never says a stock is cheap, expensive, a buy or a sell. It reports what a
+  data vendor holds.
+- Never invents a number the data does not have, or estimates one it cannot
+  derive.
+- Never presents a vendor figure as the company's own filing.
 
 ## Safety
 
-Education and tooling, not financial advice. This skill only reads filings.
+Education and tooling, not financial advice. This skill only reads data.
 Nothing places an order except `/trader-broker`, after `/trader-risk` passes
 and the user types an explicit yes for that order.

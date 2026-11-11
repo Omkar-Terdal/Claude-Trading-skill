@@ -1,0 +1,38 @@
+{
+ "_synthetic": "Synthetic, deterministic chart meta for tests; not real market data.",
+ "chart": {
+  "result": [
+   {
+    "meta": {
+     "currency": "INR",
+     "symbol": "RELIANCE.NS",
+     "exchangeName": "NSI",
+     "instrumentType": "EQUITY",
+     "regularMarketTime": 1793942520,
+     "gmtoffset": 19800,
+     "timezone": "IST",
+     "exchangeTimezoneName": "Asia/Kolkata",
+     "regularMarketPrice": 1354.6,
+     "chartPreviousClose": 1313.4,
+     "previousClose": 1313.4,
+     "longName": "Reliance Industries Limited",
+     "dataGranularity": "5m",
+     "range": "1d"
+    },
+    "timestamp": [
+     1793942520
+    ],
+    "indicators": {
+     "quote": [
+      {
+       "close": [
+        1354.6
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "error": null
+ }
+}

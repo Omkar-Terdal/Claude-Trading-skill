@@ -1,1 +1,10 @@
-{"chart":{"result":null,"error":{"code":"Not Found","description":"No data found, symbol may be delisted"}}}
+{
+ "_synthetic": "synthetic fixture: hand-built from the shape of Yahoo's chart JSON, numbers invented, no network",
+ "chart": {
+  "result": null,
+  "error": {
+   "code": "Not Found",
+   "description": "No data found, symbol may be delisted"
+  }
+ }
+}

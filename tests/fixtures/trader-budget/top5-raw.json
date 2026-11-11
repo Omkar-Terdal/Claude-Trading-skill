@@ -1,0 +1,32 @@
+{
+  "source": "Synthetic raw weights for tests, not a recommendation and not from any filing",
+  "as_of": "2026-11-06",
+  "note": "weight is not renormalised",
+  "weights": [
+    {
+      "ticker": "RELIANCE",
+      "name": "Reliance Industries",
+      "weight": 22.04
+    },
+    {
+      "ticker": "TCS",
+      "name": "Tata Consultancy Services",
+      "weight": 17.14
+    },
+    {
+      "ticker": "INFY",
+      "name": "Infosys",
+      "weight": 12.62
+    },
+    {
+      "ticker": "HDFCBANK",
+      "name": "HDFC Bank",
+      "weight": 10.86
+    },
+    {
+      "ticker": "ITC",
+      "name": "ITC",
+      "weight": 9.2
+    }
+  ]
+}

@@ -2,12 +2,12 @@
 name: trader-timemachine
 description: >-
   Time Machine. Replays every possible outcome of a trade before you risk a
-  dollar: 10,000 simulated sessions plus every past time the setup fired.
+  rupee: 10,000 simulated sessions plus every past time the setup fired.
   Takes the plan from trader-exit (entry, stop, target), rebuilds the rest of
   the day 10,000 times from the stock's own 5-minute bars over the last 60
   days, and re-runs the same rule on every past session. Prints the odds of
-  target first, stop first, or neither by the close, where the price sits at
-  the close, the average R, the history, and one honest verdict, then hands
+  target first, stop first, or neither by your flat-by time, where the price
+  sits then, the average R, the history, and one honest verdict, then hands
   off to /trader-budget. Use when the user says "run the time machine",
   "replay this trade", "what are the odds", "simulate this trade", "monte
   carlo", "backtest this setup", "how often does this hit the target", "is
@@ -32,16 +32,16 @@ good-looking replay does not change that.
 ```bash
 python3 "${CLAUDE_SKILL_DIR}/timemachine.py" run                    # trader/plan.json, 10,000 replays, seed 19
 python3 "${CLAUDE_SKILL_DIR}/timemachine.py" run --write            # also save trader/timemachine.json
-python3 "${CLAUDE_SKILL_DIR}/timemachine.py" run --until 15:55      # end each replay at your flat-by time
+python3 "${CLAUDE_SKILL_DIR}/timemachine.py" run --until 15:20      # end each replay at your flat-by time
 python3 "${CLAUDE_SKILL_DIR}/timemachine.py" run --json
-python3 "${CLAUDE_SKILL_DIR}/timemachine.py" run --symbol TSLA --date 2026-10-19 \
-    --entry 364.18 --stop 358.32 --target 370.04 --entry-time "10:15 AM"
+python3 "${CLAUDE_SKILL_DIR}/timemachine.py" run --symbol RELIANCE --date 2026-11-06 \
+    --entry 1311.90 --stop 1300.80 --target 1323.00 --entry-time "9:50 AM"
 python3 "${CLAUDE_SKILL_DIR}/timemachine.py" chart --from           # ASCII fan chart of the saved run
 ```
 
 Other flags: `--replays N`, `--seed N` (default 19), `--window N` (default 2
 bars), `--offline FILE` (a saved Yahoo chart JSON, `.json` or `.json.gz`),
-`--now "2026-10-19 10:15"` (New York time) to pin the clock.
+`--now "2026-11-06 09:55"` (IST) to pin the clock.
 
 ## What it reads and writes
 
@@ -53,18 +53,22 @@ bars), `--offline FILE` (a saved Yahoo chart JSON, `.json` or `.json.gz`),
 
 ## How it works
 
-1. **The pool.** It keeps only FULL sessions before the plan's date: all 78
-   five-minute bars, 9:30 to 4:00 New York time. Half days, gaps and today
-   are left out. Every bar becomes four ratios to the bar before it:
-   open, high, low and close over the previous close.
+1. **The pool.** It keeps only FULL sessions before the plan's date: all 75
+   five-minute bars, 9:15 to 15:30 IST. Gaps and today are left out. Every
+   bar becomes four ratios to the bar before it: open, high, low and close
+   over the previous close. **Yahoo often leaves NSE's 15:20 and 15:25 bars
+   empty.** A session missing up to three bars still counts, with each gap
+   filled by a flat bar at the previous close and zero volume, and the run
+   says how many bars it filled. In the RELIANCE run below that was 108 bars
+   across 59 sessions: the last minutes of the day are therefore calmer in
+   the replay than they really were, which matters for a flat-by of 15:20.
 2. **One replay.** Start at the entry price. For each bar left in the day,
    pick a past bar from the same time of day (plus or minus 2 bars) at
    random, and scale it to the current price. Bar by bar, it checks the stop
    first, then the target. A bar that touches both counts as the stop.
 3. **10,000 replays** give four odds. Target first. Stop first. Neither,
-   which means the trade was still open at `--until` (default 4:00 PM, the
-   close, or 1:00 PM on an NYSE early-close day). Green, which means target
-   first or above the entry at `--until`.
+   which means the trade was still open at `--until` (default 15:30, the
+   close). Green, which means target first or above the entry at `--until`.
    R is +1 at a 1R target, -1 at the stop, and otherwise the distance from
    the entry at `--until` divided by the risk. A gap through the stop still
    counts as -1R here. A real fill can be worse.
@@ -77,9 +81,7 @@ bars), `--offline FILE` (a saved Yahoo chart JSON, `.json` or `.json.gz`),
    is 50 % at 1R, 33 % at 2R, 25 % at 3R. Less than 5 points from break-even:
    "Close to a coin flip" at 1R, "Close to break-even" at any other R. 5 to
    15 points: "Leans toward the target" or "Leans toward the stop". 15 or
-   more: "Strongly toward" one of them. So a 2R plan with target first
-   24.1 % and stop first 50.5 % is close to break-even (it needs 33 % of
-   the 74.6 % that hit a side, and got 32 %), not a loser.
+   more: "Strongly toward" one of them.
 6. **Below the verdict**, when it applies: a line when more than 40 % of the
    replays hit neither (the price at `--until` decides those), and the
    average R when its sign goes against the lean. Those can only point the
@@ -87,7 +89,8 @@ bars), `--offline FILE` (a saved Yahoo chart JSON, `.json` or `.json.gz`),
 
 **The seed.** The draws come from Python's `random.Random(seed)`, seed 19 by
 default. Same plan, same data, same seed: the same numbers, on any machine.
-Say the seed with every result so the user can repeat it.
+Say the seed with every result so the user can repeat it. The data is Yahoo's
+latest 60 days, so a run on another day uses different sessions.
 
 **5-minute bars only.** Yahoo keeps 60 days of 5-min bars but only about 7
 days of 1-min bars, too few sessions for a fair pool. It refuses, in one
@@ -100,42 +103,49 @@ grid). A live in-progress bar is never used.
 
 1. Make sure `trader/plan.json` is today's plan from `/trader-exit`. If there
    is none, run that first, or pass the plan as flags.
-2. Run `timemachine.py run --write`. Add `--until 15:55` when the plan has a
-   flat-by time, so "neither" means still open at the time you would get out.
+2. Run `timemachine.py run --write --until 15:20`, using the plan's flat-by
+   time, so "neither" means still open at the time you would get out.
 3. Tell the user, in this order: the four odds, the median and the 5 to 95
-   range of the price at the close, the average R, the history line, then the
+   range of the price at the end, the average R, the history line, then the
    verdict line and any line under it exactly as printed. Say the seed.
 4. If the verdict is a coin flip or close to break-even, say so plainly. Do
    not dress it up. If the history and the replays disagree, say that too.
 5. Say once that this is built from the last 60 days and is not a prediction.
-   Earnings, news and halts can do things those 60 days never did. Check
-   `/trader-news` for the stock before going on.
+   Results, news, circuit limits and halts can do things those 60 days never
+   did. Check `/trader-news` for the stock before going on.
 6. If the user still wants the trade, hand off to `/trader-budget` to size it.
 
-## Example: the reel
+## Example: RELIANCE on Friday 2026-11-06
 
-TSLA, Monday 2026-10-19. The 15-minute opening range is 354.47 to 362.18.
-The 10:10 bar closes above it: entry 364.18 at 10:15 AM (bar 8), stop 358.32
-(the range midpoint, rounded down), target 370.04 (1R, risk 5.86 a share).
+The 15-minute opening range is 1295.60 to 1306.00. The 9:45 bar closes above
+it: entry 1311.90 at 9:50 AM (bar 6), stop 1300.80 (the range midpoint),
+target 1323.00 (1R, risk 11.10 a share). Real output of
+`timemachine.py run --write --until 15:20`:
 
 ```
-10,000 replays of the rest of the session, 10:15 AM to 4:00 PM (69 five-minute bars), seed 19.
-  target first   29.4 %
-  stop first     25.5 %
-  neither        45.1 %   still open at 4:00 PM
-  green          51.7 %   target first, or above the entry at 4:00 PM
-  Price at 4:00 PM: median 364.36, 90 % of replays between 355.54 and 373.54.
-  Average R: +0.034
-History: the same rule on each of those 59 real sessions fired 33 times:
-13 target, 15 stop, 5 neither. Average R -0.062.
-Close to a coin flip: target first 29.4 % vs stop first 25.5 %.
-45.1 % of the replays hit neither by 4:00 PM; the price at 4:00 PM decides those.
+10,000 replays of the rest of the session, 9:50 AM to 3:20 PM (66 five-minute bars), seed 19.
+Each bar is drawn whole from RELIANCE.NS's own 5-min bars at the same time of day (+-2 bars) over its last 59 full sessions (2026-08-12 to 2026-11-05).
+
+  target first   31.1 %
+  stop first     38.0 %
+  neither        30.9 %   still open at 3:20 PM
+  green          46.6 %   target first, or above the entry at 3:20 PM
+
+  Price at 3:20 PM: median 1310.82, 90 % of replays between 1290.57 and 1331.23.
+  Average R: -0.068 (R = the 11.10 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target) on each of those 59 real sessions fired 31 times: 14 target, 11 stop, 6 neither. Average R +0.054.
+
+Close to a coin flip: target first 31.1 % vs stop first 38.0 %.
+
+Note: Yahoo left 108 five-minute bar(s) empty across 59 sessions (NSE's 15:20 and 15:25 bars are often null); each gap is filled with a flat bar at the previous close.
 ```
 
 At 1R the target has to come first in half of the replays that hit one
-side. It did in 53.6 %. The replays came out close to a coin flip, and the
-real history was slightly worse than even. That is the honest answer for this setup, and it is what
-the user should hear before `/trader-budget` sizes 8 shares.
+side. It did in 45 % (31.1 of 69.1). The replays leaned slightly toward the
+stop, and the real history was slightly better than even. The two disagree,
+which is itself the honest answer: this setup is close to a coin flip, and
+that is what the user should hear before `/trader-budget` sizes 285 shares.
 
 ## Rules
 
@@ -164,5 +174,5 @@ into the pool.
   passed that exact order today, the user typed an explicit yes for that one order in the chat, and the
   user clicked Allow once on Claude's own card because the order tool is set to "Needs approval"
   (Customize > Connectors > tool permissions). Never set an order tool to "Always allow".
-- No options, margin, short selling or leverage unless the config allows it and the user confirms.
-- Broker keys live in environment variables or the Claude Desktop config, never in the chat.
+- No options, F&O, margin, short selling or leverage unless the config allows it and the user confirms.
+- Broker credentials live with the broker's own login or the Claude Desktop config, never in the chat.

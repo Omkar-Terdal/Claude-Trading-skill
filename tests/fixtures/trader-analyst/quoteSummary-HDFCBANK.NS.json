@@ -1,0 +1,169 @@
+{
+ "_synthetic": "synthetic fixture: hand-built in the shape of Yahoo's quoteSummary JSON for NSE tickers, rounded numbers, no network",
+ "quoteSummary": {
+  "error": null,
+  "result": [
+   {
+    "price": {
+     "longName": "HDFC Bank Limited",
+     "currency": "INR"
+    },
+    "financialData": {
+     "financialCurrency": "INR",
+     "currentPrice": {
+      "raw": 788.25,
+      "fmt": "788.25"
+     },
+     "totalRevenue": {
+      "raw": 3019087282176,
+      "fmt": "3019087282176"
+     },
+     "grossProfits": {
+      "raw": 3019087282176,
+      "fmt": "3019087282176"
+     },
+     "grossMargins": {
+      "raw": 0.0,
+      "fmt": "0.0"
+     },
+     "operatingMargins": {
+      "raw": 0.38482,
+      "fmt": "0.38482"
+     },
+     "profitMargins": {
+      "raw": 0.26532,
+      "fmt": "0.26532"
+     },
+     "revenueGrowth": {
+      "raw": 0.808,
+      "fmt": "0.808"
+     },
+     "earningsGrowth": {
+      "raw": 0.213,
+      "fmt": "0.213"
+     },
+     "returnOnEquity": {
+      "raw": 0.11005,
+      "fmt": "0.11005"
+     },
+     "recommendationKey": "buy"
+    },
+    "defaultKeyStatistics": {
+     "trailingEps": {
+      "raw": 45.75,
+      "fmt": "45.75"
+     },
+     "forwardEps": {
+      "raw": 62.6,
+      "fmt": "62.6"
+     },
+     "netIncomeToCommon": {
+      "raw": 801021296640,
+      "fmt": "801021296640"
+     }
+    },
+    "incomeStatementHistory": {
+     "maxAge": 86400,
+     "incomeStatementHistory": [
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1774915200,
+        "fmt": "2026-03-31"
+       },
+       "totalRevenue": {
+        "raw": 1912186100000,
+        "fmt": "1912186100000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 760259700000,
+        "fmt": "760259700000"
+       }
+      },
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1743379200,
+        "fmt": "2025-03-31"
+       },
+       "totalRevenue": {
+        "raw": 2870217300000,
+        "fmt": "2870217300000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 707922500000,
+        "fmt": "707922500000"
+       }
+      },
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1711843200,
+        "fmt": "2024-03-31"
+       },
+       "totalRevenue": {
+        "raw": 1577734500000,
+        "fmt": "1577734500000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 640620400000,
+        "fmt": "640620400000"
+       }
+      },
+      {
+       "maxAge": 1,
+       "endDate": {
+        "raw": 1680220800,
+        "fmt": "2023-03-31"
+       },
+       "totalRevenue": {
+        "raw": 1180570700000,
+        "fmt": "1180570700000"
+       },
+       "grossProfit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "ebit": {
+        "raw": 0,
+        "fmt": "0"
+       },
+       "operatingIncome": {},
+       "netIncome": {
+        "raw": 441087100000,
+        "fmt": "441087100000"
+       }
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

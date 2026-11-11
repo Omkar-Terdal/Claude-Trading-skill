@@ -1,0 +1,38 @@
+{
+ "_synthetic": "Synthetic, deterministic chart meta for tests; not real market data.",
+ "chart": {
+  "result": [
+   {
+    "meta": {
+     "currency": "INR",
+     "symbol": "INFY.NS",
+     "exchangeName": "NSI",
+     "instrumentType": "EQUITY",
+     "regularMarketTime": 1793942400,
+     "gmtoffset": 19800,
+     "timezone": "IST",
+     "exchangeTimezoneName": "Asia/Kolkata",
+     "regularMarketPrice": 1482.1,
+     "chartPreviousClose": 1478.3,
+     "previousClose": 1478.3,
+     "longName": "Infosys Limited",
+     "dataGranularity": "5m",
+     "range": "1d"
+    },
+    "timestamp": [
+     1793942400
+    ],
+    "indicators": {
+     "quote": [
+      {
+       "close": [
+        1482.1
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "error": null
+ }
+}
